@@ -2,41 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
-
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use App\Models\Testimonial;
 
 class ScraperController extends Controller
 {
-    private  $results = array();
+    public function scraper()
+    {
+        // Get HTML from the website
+        $response = Http::get('https://webtechfusion.pk/');
+        $html = $response->body();
 
+        // Load HTML into Crawler
+        $crawler = new Crawler($html);
 
-    public function scraper() {
+        $crawler->filter('.techex--t-single')->each(function ($node) {
+            $text = $node->filter('p')->text('');
+            $name = $node->filter('.techex--tn-name')->text('');
+            $title = $node->filter('.techex--tn-title')->text('');
 
-        $client = new Client();
-    $url = 'https://webtechfusion.pk/';
-    $response = $client->request('GET', $url);
+            $img = $node->filter('.wp-post-image')->attr('src');
+            $imgName = basename($img);
 
-    $html = $response->getBody()->getContents();
-    $crawler = new Crawler($html);
+            // Save image locally
+            file_put_contents(public_path("scraped/$imgName"), file_get_contents($img));
 
-    $results = [];
-
-    // Loop through each parent div
-    $crawler->filter('.techex--tn-single.style-three.no')->each(function (Crawler $node) use (&$results) {
-        $icon = $node->filter('.techex--tn-icon')->count() ? $node->filter('.techex--tn-icon')->text() : '';
-        $description = $node->filter('.techex--tn-dis')->count() ? $node->filter('.techex--tn-dis')->text() : '';
-        $bottom = $node->filter('.techex-tn-bottom')->count() ? $node->filter('.techex-tn-bottom')->text() : '';
-
-        $results[] = [
-            'icon' => $icon,
-            'description' => $description,
-            'bottom' => $bottom,
-        ];
-    });
-
-    dd($results); // Display scraped data
+            // Save to DB
+            Testimonial::create([
+                'name' => $name,
+                'title' => $title,
+                'text' => $text,
+                'image' => "scraped/$imgName"
+            ]);
+        });
     }
 
+
+    public function showTestimonials()
+    {
+        $items = Testimonial::get();
+
+        return view('scraper', compact('items'));
+    }
 }

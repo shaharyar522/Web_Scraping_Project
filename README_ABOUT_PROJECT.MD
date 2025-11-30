@@ -8,6 +8,49 @@ AND SECOND I HAVE REDIRECT TO VIEW BLADE PAGE
 
 //2 pakj hian
 
+
+For modern Laravel projects (Laravel 12) and web scraping, you do NOT need Goutte at all. Both fabpot/goutte and weidner/goutte are outdated and cause PHP version conflicts.
+
+✅ What you should install:
+
+1. Symfony DomCrawler – to parse HTML:
+composer require symfony/dom-crawler
+
+2. Symfony CSS Selector – needed by DomCrawler:
+composer require symfony/css-selector
+
+3. Guzzle HTTP Client – to fetch web pages:
+composer require guzzlehttp/guzzle
+
+
+
+
+
+
+That’s it! Only these three commands are enough for any Laravel 12 project for web scraping.
+
+❌ Do NOT run:
+
+composer require fabpot/goutte
+
+composer require weidner/goutte
+
+They are outdated and will break your PHP 8.2 / Laravel 12 project.
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////// extra notes hia ok   ////////////////////////////
+
+
+
 for larave best 12 use this
 these two command :
 composer require symfony/dom-crawler symfony/css-selector
