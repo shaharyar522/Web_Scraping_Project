@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('demo_scrapes', function (Blueprint $table) {
             $table->id();
-            $table->string('text')->nullable();
+            $table->string('product_star_rating')->nullable();
+            $table->string('product_title')->nullable();
+            $table->decimal('product_price', 10, 2)->nullable();
+            $table->string('product_stock')->nullable();
             $table->timestamps();
         });
     }
 
     /**
+     *
      * Reverse the migrations.
+     *
      */
     public function down(): void
     {

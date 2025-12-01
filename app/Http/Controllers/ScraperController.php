@@ -25,7 +25,7 @@ class ScraperController extends Controller
             $img = $node->filter('.wp-post-image')->attr('src');
             $imgName = basename($img);
 
-            // Save image locally
+            //Save image locally
             file_put_contents(public_path("scraped/$imgName"), file_get_contents($img));
 
             // Save to DB

@@ -4,9 +4,9 @@ use App\Http\Controllers\DemoScrapeController;
 use App\Http\Controllers\ScraperController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 
 
@@ -18,5 +18,11 @@ Route::get('/scraper', [ScraperController::class, 'scraper'])->name('scraper');
 Route::get('/testimonials', [ScraperController::class, 'showTestimonials'])->name('testimonials');
 
 
-Route::get('/demo-scrape', [DemoScrapeController::class, 'scrape'])->name('demo.scrape');
-Route::get('/demo', [DemoScrapeController::class, 'index'])->name('demo.index');
+Route::get('/', [DemoScrapeController::class, 'scrape'])->name('demo.scrape');
+Route::get('/toscrape', [DemoScrapeController::class, 'index'])->name('demo.index');
+
+
+// Quick CSV  export file
+
+Route::get('/demo-export-csv', [DemoScrapeController::class, 'exportCsv'])->name('demo.export.csv');
+
