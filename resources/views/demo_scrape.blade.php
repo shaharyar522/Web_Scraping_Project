@@ -17,7 +17,7 @@
 </head>
 <body>
 
-```
+
 <h2>Scraped Data</h2>
 
 @if(session('success'))
@@ -32,11 +32,11 @@
                 <th>Product Title</th>
                 <th>Star Rating</th>
                 <th>Price</th>
-                <th>Stock</th>
+                {{-- //<th>Stock</th> --}}
                 <th>Created At</th>
             </tr>
         </thead>
-        
+
         <tbody>
             @foreach ($items as $item)
                 <tr>
@@ -44,7 +44,7 @@
                     <td>{{ $item->product_title }}</td>
                     <td>{{ $item->product_star_rating }}</td>
                     <td>{{ $item->product_price }}</td>
-                    <td>{{ $item->product_stock }}</td>
+                    {{-- <td>{{ $item->product_stock }}</td> --}}
                     <td>{{ $item->created_at->format('Y-m-d H:i') }}</td>
                 </tr>
             @endforeach
@@ -56,7 +56,7 @@
 @else
     <p>No data scraped yet.</p>
 @endif
-```
+
 
 </body>
 </html>

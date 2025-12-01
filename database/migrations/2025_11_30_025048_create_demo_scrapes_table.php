@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('product_star_rating')->nullable();
             $table->string('product_title')->nullable();
             $table->decimal('product_price', 10, 2)->nullable();
-            $table->string('product_stock')->nullable();
+            $table->string('product_stock');
             $table->timestamps();
         });
     }
