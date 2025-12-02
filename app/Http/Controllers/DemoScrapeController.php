@@ -62,6 +62,7 @@ class DemoScrapeController extends Controller
     }
 
     // Export CSV and delete old data after download
+
     public function exportCsv()
     {
         $items = DemoScrape::all();
@@ -69,33 +70,32 @@ class DemoScrapeController extends Controller
         $filename = 'scraped_data_' . date('Ymd_His') . '.csv';
 
         $headers = [
-            'Content-Type' => 'text/csv',
+            'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => "attachment; filename=\"$filename\"",
         ];
 
         $callback = function () use ($items) {
             $file = fopen('php://output', 'w');
 
-            // Header
+            // Optional: Add BOM for Excel UTF-8 support
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            // Header row
             fputcsv($file, ['ID', 'Title', 'Price', 'Stock', 'Star Rating', 'Created At'], ',', '"');
 
             foreach ($items as $item) {
                 fputcsv($file, [
                     $item->id,
-                    html_entity_decode(trim($item->product_title)),
+                    str_replace(["\r", "\n"], ' ', html_entity_decode(trim($item->product_title))),
                     $item->product_price,
-                    html_entity_decode(trim($item->product_stock)),
-                    html_entity_decode(trim($item->product_star_rating)),
+                    str_replace(["\r", "\n"], ' ', html_entity_decode(trim($item->product_stock))),
+                    str_replace(["\r", "\n"], ' ', html_entity_decode(trim($item->product_star_rating))),
                     $item->created_at,
                 ], ',', '"');
             }
 
             fclose($file);
         };
-
-
-        // Delete old data after CSV is generated
-        DemoScrape::truncate();
 
         return Response::stream($callback, 200, $headers);
     }

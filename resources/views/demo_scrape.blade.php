@@ -33,7 +33,7 @@
                 <th>Star Rating</th>
                 <th>Price</th>
                 {{-- //<th>Stock</th> --}}
-                <th>Created At</th>
+                {{-- <th>Created At</th> --}}
             </tr>
         </thead>
 
@@ -45,7 +45,7 @@
                     <td>{{ $item->product_star_rating }}</td>
                     <td>{{ $item->product_price }}</td>
                     {{-- <td>{{ $item->product_stock }}</td> --}}
-                    <td>{{ $item->created_at->format('Y-m-d H:i') }}</td>
+                    {{-- <td>{{ $item->created_at->format('Y-m-d H:i') }}</td> --}}
                 </tr>
             @endforeach
         </tbody>
