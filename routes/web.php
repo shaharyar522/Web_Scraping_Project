@@ -24,5 +24,5 @@ Route::get('/toscrape', [DemoScrapeController::class, 'index'])->name('demo.inde
 
 // Quick CSV  export file
 
-Route::get('/demo-export-csv', [DemoScrapeController::class, 'exportCsv'])->name('demo.export.csv');
+Route::get('/demo.export.excel', [DemoScrapeController::class, 'exportExcel'])->name('demo.export.excel');
 

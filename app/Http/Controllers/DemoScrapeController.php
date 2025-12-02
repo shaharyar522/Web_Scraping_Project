@@ -7,6 +7,8 @@ use Symfony\Component\DomCrawler\Crawler;
 use App\Models\DemoScrape;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use App\Exports\ScrapeExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DemoScrapeController extends Controller
 {
@@ -63,40 +65,10 @@ class DemoScrapeController extends Controller
 
     // Export CSV and delete old data after download
 
-    public function exportCsv()
+
+    public function exportExcel()
     {
-        $items = DemoScrape::all();
-
-        $filename = 'scraped_data_' . date('Ymd_His') . '.csv';
-
-        $headers = [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => "attachment; filename=\"$filename\"",
-        ];
-
-        $callback = function () use ($items) {
-            $file = fopen('php://output', 'w');
-
-            // Optional: Add BOM for Excel UTF-8 support
-            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
-
-            // Header row
-            fputcsv($file, ['ID', 'Title', 'Price', 'Stock', 'Star Rating', 'Created At'], ',', '"');
-
-            foreach ($items as $item) {
-                fputcsv($file, [
-                    $item->id,
-                    str_replace(["\r", "\n"], ' ', html_entity_decode(trim($item->product_title))),
-                    $item->product_price,
-                    str_replace(["\r", "\n"], ' ', html_entity_decode(trim($item->product_stock))),
-                    str_replace(["\r", "\n"], ' ', html_entity_decode(trim($item->product_star_rating))),
-                    $item->created_at,
-                ], ',', '"');
-            }
-
-            fclose($file);
-        };
-
-        return Response::stream($callback, 200, $headers);
+        $filename = 'scraped_data_' . date('Ymd_His') . '.xlsx';
+        return Excel::download(new ScrapeExport, $filename);
     }
 }
